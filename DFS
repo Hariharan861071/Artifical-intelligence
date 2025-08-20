@@ -1,0 +1,31 @@
+def dfs(graph, start):
+    visited = set()
+    stack = [start]
+    order = []
+
+    while stack:
+        node = stack.pop()
+        if node not in visited:
+            visited.add(node)
+            order.append(node)
+
+            # Add neighbors to stack (in reverse to maintain order)
+            for neighbor in reversed(graph.get(node, [])):
+                if neighbor not in visited:
+                    stack.append(neighbor)
+    
+    return order
+
+# Example usage:
+if __name__ == "__main__":
+    graph = {
+        'A': ['B', 'C'],
+        'B': ['D', 'E'],
+        'C': ['F'],
+        'D': [],
+        'E': ['F'],
+        'F': []
+    }
+
+    dfs_order = dfs(graph, 'A')
+    print("DFS Traversal Order:", dfs_order)
