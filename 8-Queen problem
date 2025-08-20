@@ -1,0 +1,40 @@
+def is_safe(board, row, col):
+    # Check this column for another queen
+    for i in range(row):
+        if board[i] == col:
+            return False
+    
+    # Check upper left diagonal
+    for i, j in zip(range(row-1, -1, -1), range(col-1, -1, -1)):
+        if board[i] == j:
+            return False
+    
+    # Check upper right diagonal
+    for i, j in zip(range(row-1, -1, -1), range(col+1, 8)):
+        if board[i] == j:
+            return False
+    
+    return True
+
+def solve_queens(board, row=0):
+    if row == 8:
+        return True
+    
+    for col in range(8):
+        if is_safe(board, row, col):
+            board[row] = col
+            if solve_queens(board, row + 1):
+                return True
+            # Backtrack
+            board[row] = -1
+    return False
+
+def print_board(board):
+    for row in range(8):
+        line = ""
+        for col in range(8):
+            if board[row] == col:
+                line += "Q "
+            else:
+                line += ". "
+        print(lin
