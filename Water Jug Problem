@@ -1,0 +1,62 @@
+from collections import deque
+
+def water_jug_bfs(jug1, jug2, target):
+    # To keep track of visited states: (amount_in_jug1, amount_in_jug2)
+    visited = set()
+    # Queue will store tuples: (jug1_amount, jug2_amount, path_taken)
+    queue = deque()
+    
+    # Start from (0, 0)
+    queue.append((0, 0, []))
+    
+    while queue:
+        jug1_amt, jug2_amt, path = queue.popleft()
+        
+        # If we reached the target in either jug
+        if jug1_amt == target or jug2_amt == target:
+            path.append((jug1_amt, jug2_amt))
+            return path
+        
+        # Skip already visited states
+        if (jug1_amt, jug2_amt) in visited:
+            continue
+        
+        visited.add((jug1_amt, jug2_amt))
+        
+        # Append current state to path
+        path = path + [(jug1_amt, jug2_amt)]
+        
+        # Possible actions:
+        # 1. Fill Jug1
+        queue.append((jug1, jug2_amt, path))
+        # 2. Fill Jug2
+        queue.append((jug1_amt, jug2, path))
+        # 3. Empty Jug1
+        queue.append((0, jug2_amt, path))
+        # 4. Empty Jug2
+        queue.append((jug1_amt, 0, path))
+        # 5. Pour Jug1 -> Jug2
+        pour_to_jug2 = min(jug1_amt, jug2 - jug2_amt)
+        queue.append((jug1_amt - pour_to_jug2, jug2_amt + pour_to_jug2, path))
+        # 6. Pour Jug2 -> Jug1
+        pour_to_jug1 = min(jug2_amt, jug1 - jug1_amt)
+        queue.append((jug1_amt + pour_to_jug1, jug2_amt - pour_to_jug1, path))
+    
+    return None  # No solution found
+
+def print_solution(path):
+    if not path:
+        print("No solution found.")
+        return
+    
+    print("Steps to reach the target:")
+    for i, (jug1_amt, jug2_amt) in enumerate(path):
+        print(f"Step {i}: Jug1 = {jug1_amt}, Jug2 = {jug2_amt}")
+
+# Example usage:
+jug1_capacity = 4
+jug2_capacity = 3
+target_amount = 2
+
+solution_path = water_jug_bfs(jug1_capacity, jug2_capacity, target_amount)
+print_solution(solution_path)
