@@ -1,0 +1,61 @@
+from collections import deque
+
+def is_valid(m_left, c_left, m_right, c_right):
+    # Check if numbers are valid (no negative)
+    if m_left < 0 or c_left < 0 or m_right < 0 or c_right < 0:
+        return False
+    # Missionaries cannot be outnumbered on either side (unless no missionaries)
+    if m_left > 0 and m_left < c_left:
+        return False
+    if m_right > 0 and m_right < c_right:
+        return False
+    return True
+
+def get_next_states(state):
+    m_left, c_left, boat, m_right, c_right = state
+    moves = [(2,0),(0,2),(1,1),(1,0),(0,1)]  # possible moves (missionaries, cannibals)
+    next_states = []
+
+    if boat == 'left':
+        for m, c in moves:
+            new_state = (m_left - m, c_left - c, 'right', m_right + m, c_right + c)
+            if is_valid(*new_state[:2], *new_state[3:]):
+                next_states.append(new_state)
+    else:
+        for m, c in moves:
+            new_state = (m_left + m, c_left + c, 'left', m_right - m, c_right - c)
+            if is_valid(*new_state[:2], *new_state[3:]):
+                next_states.append(new_state)
+
+    return next_states
+
+def solve_missionaries_cannibals():
+    start = (3, 3, 'left', 0, 0)
+    goal = (0, 0, 'right', 3, 3)
+
+    queue = deque([[start]])
+    visited = set([start])
+
+    while queue:
+        path = queue.popleft()
+        current_state = path[-1]
+
+        if current_state == goal:
+            return path
+
+        for state in get_next_states(current_state):
+            if state not in visited:
+                visited.add(state)
+                queue.append(path + [state])
+    return None
+
+def print_solution(solution):
+    if not solution:
+        print("No solution found.")
+        return
+    for i, (m_left, c_left, boat, m_right, c_right) in enumerate(solution):
+        print(f"Step {i}: Left Bank -> M:{m_left}, C:{c_left} | Boat: {boat} | Right Bank -> M:{m_right}, C:{c_right}")
+
+if __name__ == "__main__":
+    solution = solve_missionaries_cannibals()
+    print_solution(solution)
