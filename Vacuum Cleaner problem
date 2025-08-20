@@ -1,0 +1,42 @@
+class VacuumCleaner:
+    def __init__(self):
+        # Initial state: Assume vacuum is in the left room
+        # and both rooms might be dirty or clean
+        self.location = 'A'  # Vacuum starts in room A
+        self.state = {'A': 'dirty', 'B': 'dirty'}
+
+    def perceive(self):
+        # Return the current perception: location and state of that location
+        return self.location, self.state[self.location]
+
+    def action(self, location, status):
+        if status == 'dirty':
+            return 'Suck'
+        elif location == 'A':
+            return 'MoveRight'
+        else:
+            return 'MoveLeft'
+
+    def run(self):
+        steps = 0
+        while 'dirty' in self.state.values():
+            location, status = self.perceive()
+            act = self.action(location, status)
+            print(f"Location: {location}, Status: {status} => Action: {act}")
+            
+            if act == 'Suck':
+                self.state[location] = 'clean'
+            elif act == 'MoveRight':
+                self.location = 'B'
+            elif act == 'MoveLeft':
+                self.location = 'A'
+            
+            steps += 1
+            if steps > 10:  # just a safety break to avoid infinite loops
+                break
+        
+        print("Both rooms are clean. Task completed!")
+
+if __name__ == "__main__":
+    vacuum = VacuumCleaner()
+    vacuum.run()
