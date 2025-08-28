@@ -1,0 +1,7 @@
+% Facts: name_dob(Name, DOB).
+name_dob('Hari', '01-01-2000').
+name_dob('Ravi', '12-05-1999').
+name_dob('Anu', '23-08-2001').
+
+% Rule to find DOB by Name
+get_dob(Name, DOB) :- name_dob(Name, DOB).
