@@ -1,0 +1,7 @@
+% student_teacher_sub_code(Student, Teacher, Subject, Code).
+student_teacher_sub_code('Arun', 'Dr.Smith', 'AI', 'CSE101').
+student_teacher_sub_code('Priya', 'Dr.John', 'DBMS', 'CSE102').
+student_teacher_sub_code('Kumar', 'Dr.Smith', 'AI', 'CSE101').
+
+% Rule to find teacher by subject code
+get_teacher(Code, Teacher) :- student_teacher_sub_code(_, Teacher, _, Code).
